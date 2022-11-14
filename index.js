@@ -1,7 +1,6 @@
 // import modules
 require('dotenv').config({ path: '.env' });
 const bodyParser = require('body-parser');
-const cors = require('cors')
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const express = require('express');
