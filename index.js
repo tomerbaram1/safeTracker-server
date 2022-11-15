@@ -1,7 +1,7 @@
 // import modules
 require('dotenv').config({ path: '.env' });
 const bodyParser = require('body-parser');
-const jwt = require('jsonwebtoken');
+
 const mongoose = require('mongoose');
 const express = require('express');
 const app = express();
@@ -9,6 +9,8 @@ const cors = require('cors');
 const morgan = require('morgan');
 const port =  process.env.PORT || 4000;
 const rateLimit= require('express-rate-limit')
+const register = require('./routes/register')
+const login = require('./routes/login')
 // DB
 mongoose.connect(process.env.DB,{
     useNewUrlParser:true,
@@ -43,36 +45,10 @@ const limiter = rateLimit({
 app.use(limiter)
 
 // routes
+app.use('/api/register',register)
+app.use('/api/login',login)
 
 
-app.use((err, req, res, next) => {
-    console.log(err);
-    next();
-  });
-  
-  //middleware that checks if JWT token exists and verifies it if it does exist.
-  //In all the future routes, this helps to know if the request is authenticated or not.
-  app.use(function(req, res, next) {
-    // check header or url parameters or post parameters for token
-  
-    var token = req.headers['Authorization'];
-  
-    if (!token) return next();
-  
-    token = token.replace('Bearer ', '');
-  
-    jwt.verify(token, process.env.JWT_SECRET, function(err, user) {
-      if (err) {
-        return res.status(401).json({
-          success: false,
-          message: 'Please register Log in using a valid email to submit posts'
-        });
-      } else {
-        req.user = user;
-        next();
-      }
-    });
-  });
   
   app.listen(port, () => {
     console.log(`Server running on port ${port}`);
