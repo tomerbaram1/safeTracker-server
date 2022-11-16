@@ -11,6 +11,7 @@ const port =  process.env.PORT || 4000;
 const rateLimit= require('express-rate-limit')
 const register = require('./routes/register')
 const login = require('./routes/login')
+const addChild = require('./routes/addChild')
 // DB
 mongoose.connect(process.env.DB,{
     useNewUrlParser:true,
@@ -47,6 +48,7 @@ app.use(limiter)
 // routes
 app.use('/api/register',register)
 app.use('/api/login',login)
+app.use('/api/addchild',addChild)
 
 
   

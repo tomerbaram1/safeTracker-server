@@ -24,13 +24,13 @@ const UserSchema = new schema ({
     },
     
     children:[
-        {childname: String,
-        phone: String,
+        {childName: String,
+        childPhone: String,
         connectionToken:String,
         location:[{latitude:String,longitude:String}] }
        
     ],
-    connectionTokens:Array,
+    // connectionTokens:Array,
     BaseLocation:[{latitude:String,longitude:String,name:String}]
 }) 
 
