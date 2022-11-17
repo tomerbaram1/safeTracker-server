@@ -13,7 +13,7 @@ router.get("/",async(req,res)=>{
 
 // Post Method
 router.post('/',async (req,res) => {
-
+console.log('sign up progress started');
 // validate data
 const schema =Joi.object({
     email: Joi.string().min(3).max(200).required().email(),
@@ -21,10 +21,14 @@ const schema =Joi.object({
     phoneNumber: Joi.string().min(7).max(12).required(),
     password: Joi.string().min(8).max(200).required()
 })
+console.log('validation progress started');
+
 // checked if user already exists
 const { error } = schema.validate(req.body);
 if ( error ) return res.status(400).send(error.details[0].message);
 const userExists  = await User.findOne({ email: req.body.email});
+console.log("req.body",req.body);
+console.log("user exists",userExists);
 if (userExists) return res.status(400).send("User already exists");
 // create a document
 let user = new User({
@@ -36,7 +40,7 @@ let user = new User({
     connectionTokens: req.body.connectionTokens,
     BaseLocation: req.body.BaseLocation
 });
-
+console.log("new user created",user);
 // hash password(so no one could access the info)
 const salt = await bcrypt.genSalt(10)
 user.password = await bcrypt.hash(user.password, salt)
@@ -57,7 +61,7 @@ if (user) {
     throw new Error('Invalid user data')
   }
   user = await user.save()
-  
+  console.log("user created");
 })
 
 
