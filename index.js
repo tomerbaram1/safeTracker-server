@@ -11,6 +11,55 @@ const port =  process.env.PORT || 4000;
 const rateLimit= require('express-rate-limit')
 const register = require('./routes/register')
 const login = require('./routes/login')
+
+
+
+
+///socket
+var socket = require('socket.io');
+
+
+var server = app.listen(4000, function(){
+    console.log('listening for requests on port 4000,');
+});
+
+
+let io = require('socket.io')(server);
+const map = require('./routes/maps')(io);
+
+
+
+io.on('connection', function(socket){
+  console.log(`${socket.id} is connected`)
+  
+  socket.on('join', () => {
+    socket.join(socket.id)
+    console.log(`user ${socket.id} joined room ${socket.id}`);
+  })
+
+
+console.log("***")
+  socket.on('disOn', (location,id) => {
+    console.log("on")
+    socket.emit('disTo', getDis(location,String(id)))
+    console.log(`user ${socket.id} joined room ${socket.id}`);
+  })
+ 
+
+socket.on('disconnect',()=>{
+  console.log("user"+socket.id+" disconnected")
+})
+
+
+});
+/// socket end
+
+
+
+
+
+
+
 // DB
 mongoose.connect(process.env.DB,{
     useNewUrlParser:true,
@@ -30,10 +79,6 @@ app.use((req, res, next) => {
   app.use((morgan("dev")))
 
 
-// body
-app.get("/",(req,res) =>{
-    res.send('Welcome to safeTracker API')
-})
 
 
 // Limit requests from API
@@ -47,9 +92,14 @@ app.use(limiter)
 // routes
 app.use('/api/register',register)
 app.use('/api/login',login)
-
+app.use('/api-map',map)
 
   
-  app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
-  });
+  // app.listen(port, () => {
+  //   console.log(`Server running on port ${port}`);
+  // });
+
+  function emitKidsLocation(room,childerenArray){
+    socket.emit(room, childerenArray);
+
+  }
