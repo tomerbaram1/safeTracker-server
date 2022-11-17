@@ -27,7 +27,7 @@ const UserSchema = new schema ({
         {childName: String,
         childPhone: String,
         connectionToken:String,
-        location:[{latitude:String,longitude:String}] }
+        location:[{latitude:String,longitude:String,time:Number}] }
        
     ],
     // connectionTokens:Array,
