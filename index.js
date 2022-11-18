@@ -29,29 +29,29 @@ let io = require('socket.io')(server);
 
 
 
-io.on('connection', function(socket){
-  console.log(`${socket.id} is connected`)
+// io.on('connection', function(socket){
+//   console.log(`${socket.id} is connected`)
   
-  socket.on('join', () => {
-    socket.join(socket.id)
-    console.log(`user ${socket.id} joined room ${socket.id}`);
-  })
+//   socket.on('join', () => {
+//     socket.join(socket.id)
+//     console.log(`user ${socket.id} joined room ${socket.id}`);
+//   })
 
 
-console.log("***")
-  socket.on('disOn', (location,id) => {
-    console.log("on")
-    socket.emit('disTo', getDis(location,String(id)))
-    console.log(`user ${socket.id} joined room ${socket.id}`);
-  })
+// console.log("***")
+//   socket.on('disOn', (location,id) => {
+//     console.log("on")
+//     socket.emit('disTo', getDis(location,String(id)))
+//     console.log(`user ${socket.id} joined room ${socket.id}`);
+//   })
  
 
-socket.on('disconnect',()=>{
-  console.log("user"+socket.id+" disconnected")
-})
+// socket.on('disconnect',()=>{
+//   console.log("user"+socket.id+" disconnected")
+// })
 
 
-});
+// });//
 app.io=io
 global.io = io
 /// socket end
@@ -77,13 +77,15 @@ app.use((req, res, next) => {
     next();
   });
   app.use(cors())
-  app.use(bodyParser.json());
+  
   app.use((morgan("dev")))
+  app.use(bodyParser({limit: '50mb'}));
+  // app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
   app.use(function(req,res,next){
     req.io = io;
     next();
     })
-
+//
 
 
 // Limit requests from API
