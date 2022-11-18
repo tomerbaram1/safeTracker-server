@@ -6,7 +6,7 @@ const activatePushNotification= require('../utills/notification')
 const { User } = require('../models/user')
 
 
-module.exports = function(io) {
+
 
     // define your router and set it up
     // you can then use io in your routes here
@@ -96,7 +96,7 @@ router.post('/get', function(req, res, next) {
   });
 //testing
 
-
+//
 
 
 
@@ -128,26 +128,34 @@ console.log("add")
 //childeren location
 router.patch('/users/parent/addChildrenLocation', function(req, res, next) {
     const {id,currentLocation,connectionToken,token}=req.body;
-    
+    let children;
     console.log("id")
     User.findOne({_id:id})
       .then((data) =>data?
       User.findByIdAndUpdate(id, { $set: {children: updateKidLocationArray(data.children,connectionToken,currentLocation)} },
-         { new: false }).then( async (data) => {
-        
+         { new: false }).then((data) => {
+            // children=data.children;
+            
+
+  
             const kidIndex=data.children.findIndex(e=>e.connectionToken==connectionToken)
             console.log(kidIndex)
             if(distance(data.children[kidIndex].location[data.children[kidIndex].location.length-1].latitude,currentLocation.coords.latitude,
                 data.children[kidIndex].location[data.children[kidIndex].location.length-1].longitude,currentLocation.coords.longitude
                  ))
-                      activatePushNotification(token,"ss")
-                      socket.emit(`${id}`,data.children)
+                    //   activatePushNotification(token,"ss")
+                      console.log("sssssssssssssssssssssss")
+                      global.io.emit(`${id}`, {children:data.children});
+                    
+                    //
 /// pass home name so that it will not fire allways
 
       }).catch(err=>res.json(err))
       
       :res.json("user not found"))
       .catch(next)
+     
+     
   });
 //To do after update we can add socket call to parent clinet and 
 //with that we will not need the getChildrenLocation route
@@ -163,6 +171,5 @@ router.patch('/users/parent/addChildrenLocation', function(req, res, next) {
 
 
 
-  return router;
+  module.exports = router;
   
-}

@@ -11,7 +11,7 @@ const port =  process.env.PORT || 4000;
 const rateLimit= require('express-rate-limit')
 const register = require('./routes/register')
 const login = require('./routes/login')
-
+const map =require('./routes/maps')
 
 
 
@@ -25,7 +25,7 @@ var server = app.listen(4000, function(){
 
 
 let io = require('socket.io')(server);
-const map = require('./routes/maps')(io);
+// const map = require('./routes/maps')(io);
 
 
 
@@ -52,6 +52,8 @@ socket.on('disconnect',()=>{
 
 
 });
+app.io=io
+global.io = io
 /// socket end
 
 
@@ -77,7 +79,10 @@ app.use((req, res, next) => {
   app.use(cors())
   app.use(bodyParser.json());
   app.use((morgan("dev")))
-
+  app.use(function(req,res,next){
+    req.io = io;
+    next();
+    })
 
 
 
