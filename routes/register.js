@@ -3,7 +3,7 @@ const Joi = require("joi");
 const express = require("express");
 const { User, genAuthToken } = require("../models/user");
 const router = express.Router();
-
+//
 // Get all Method
 router.get("/", async (req, res) => {
   const users = await User.find({});
