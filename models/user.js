@@ -38,24 +38,10 @@ const UserSchema = new schema({
 const User = mongoose.model("user", UserSchema);
 
 
-    password: {
-        type: String,
-        required: true
-    },
-    
-    children:[
-        {childname: String,
-        phone: String,
-        batteryLevel:Number,
-        events:[{event:String,time:Number}],
-        connectionToken:String,
-        location:[{latitude:String,longitude:String,time:Number,locationName:String}]}
-    ],
-    connectionTokens:Array,
-    BaseLocation:[{latitude:String,longitude:String,name:String}]
-}) 
+  
 
-const User = mongoose.model('user', UserSchema)
+
+
 
 const genAuthToken = (user => {
     const secretKey = process.env.JWT_SECRET;
@@ -74,6 +60,6 @@ const genAuthToken = (user => {
     secretKey
   );
   return token;
-};
+});
 
 module.exports = { User, genAuthToken };

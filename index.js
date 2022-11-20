@@ -12,7 +12,8 @@ const port =  process.env.PORT || 4000;
 const rateLimit= require('express-rate-limit')
 const register = require('./routes/register')
 const login = require('./routes/login')
-const map =require('./routes/maps')
+const addChild = require('./routes/addChild')
+
 
 
 
@@ -25,10 +26,10 @@ var server = app.listen(4000, function () {
 });
 
 let io = require("socket.io")(server);
-const map = require("./routes/maps")(io);
+const map = require("./routes/maps");
 
 
-let io = require('socket.io')(server);
+
 // const map = require('./routes/maps')(io);
 
 
