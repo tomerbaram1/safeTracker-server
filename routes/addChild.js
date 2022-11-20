@@ -2,37 +2,37 @@ const Joi = require("joi");
 const express = require("express");
 const { User } = require("../models/user");
 const router = express.Router();
-const uuid = require('uuid')
+const uuid = require("uuid");
 
-router.get("/", async (req, res) => {
-  const users = await User.find({});
+router.post("/", async (req, res) => {
+
+  const id = req.body.id
+  console.log(id+"back");
+  const users = await User.findOne({ _id: id });
+  console.log(users);
   return res.send(users);
 });
 
 const childToken = uuid.v4();
 
-console.log(childToken.slice(0,13));
+console.log(childToken.slice(0, 13));
 
 router.patch("/", async (req, res) => {
- 
   // const {child} = req.body
-  const {id} = req.body
+  const { id } = req.body;
   try {
-    const addedChild = await User.findOneAndUpdate( id, {
+    const addedChild = await User.findOneAndUpdate(id, {
       $push: {
         children: {
           childName: req.body.childName,
           childPhone: req.body.childPhone,
-          connectionToken: childToken.slice(0,13),
+          connectionToken: childToken.slice(0, 13),
         },
       },
-    })
-    .then((data) => res.send(data.children) && console.log(data))
+    }).then((data) => res.send(data.children) && console.log(data));
   } catch (error) {
     console.log(error);
   }
-
-
 });
 
 // router.patch("/:id", async(req,res) => {
