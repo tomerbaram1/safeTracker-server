@@ -18,7 +18,7 @@ const sendPushNotification = async (targetExpoPushToken, message) => {
     const expo = new Expo();
    
     const chunks = expo.sendPushNotificationsAsync([
-      { to:targetExpoPushToken , sound: "default", body: "message" }
+      { to:targetExpoPushToken ,  title: message, sound: "default", body:message  }
     ])
   }
   
@@ -26,11 +26,11 @@ const sendPushNotification = async (targetExpoPushToken, message) => {
  function activatePushNotification(expoPushToken,message)
 {
   console.log("expoPushToken")
-  // if (Expo.isExpoPushToken(expoPushToken)) {
+  if (Expo.isExpoPushToken(expoPushToken)) {
     sendPushNotification(expoPushToken, message);
-  //     console.log("true")
-  // }
-  // else console.log("false")
+      console.log("true")
+  }
+  else console.log("false")
     }
 
 

@@ -26,9 +26,10 @@ const UserSchema = new schema ({
     children:[
         {childname: String,
         phone: String,
+        batteryLevel:Number,
+        events:[{event:String,time:Number}],
         connectionToken:String,
-        location:[{latitude:String,longitude:String,time:Number}] }
-       
+        location:[{latitude:String,longitude:String,time:Number,locationName:String}]}
     ],
     connectionTokens:Array,
     BaseLocation:[{latitude:String,longitude:String,name:String}]

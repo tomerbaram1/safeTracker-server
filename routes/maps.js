@@ -14,29 +14,169 @@ const { User } = require('../models/user')
 
 /// helpers
 
-function updateKidLocationArray(children,connectionToken,currentLocation)
+
+function isInsertEvent(event,children,time,kidIndex)
 {
-   
-    let time=new Date().getTime()
+    const today=  new Date();
+    const dateOfFirstEvent= new Date(children[kidIndex].events[0]?.time);
     
-    for(let i=0;i<children.length;i++)
-    {
-        
-        if(children[i].connectionToken==connectionToken)
-        {
-            let obj={latitude:currentLocation.coords.latitude,longitude:currentLocation.coords.longitude,time:time}
-          
-            children[i].location.length<11?
-            children[i].location.push(obj):
-            (children[i].location.shift(),children[i].location.push(obj))
-        }
 
-    }
+if( children[kidIndex].events.length!=0)
 
+  { if( today.getDay() == dateOfFirstEvent.getDay()
+   && today.getMonth()==dateOfFirstEvent.getMonth()
+   &&today.getFullYear()==dateOfFirstEvent.getFullYear())
+   children[kidIndex].events.push({event:event,time:time})
+   else
+   {
+    children[kidIndex].events.shift()
+    children[kidIndex].events.push({event:event,time:time})
+   }
+}
+else
+children[kidIndex].events.push({event:event,time:time})
 return children
 }
 
 
+
+ function updateKidLocationArray(children,connectionToken,
+    currentLocation,data,token,batteryLevel)
+{
+    let time=new Date().getTime()
+    const kidIndex=data.children.findIndex(e=>e.connectionToken==connectionToken)
+    data.children[kidIndex].batteryLevel=batteryLevel;
+    console.log(data.children[kidIndex].batteryLevel+"data.children[kidIndex].batteryLevel")
+    console.log(kidIndex+"indexKid")
+    console.log(children+"start4"+data.children[kidIndex].name)
+   let {locationName,event}=setKidsCurrentLocationName(kidIndex,data,token,currentLocation,time)
+   console.log(children[kidIndex].childname+"start5")
+
+   console.log("is event happend"+ event)
+   console.log("is locationName exist"+ locationName)
+       event?children= isInsertEvent(event,children,time,kidIndex):""
+    
+   
+            let obj={latitude:currentLocation.coords.latitude,longitude:currentLocation.coords.longitude,time:time,locationName:locationName}
+            
+          console.log("obj"+obj.locationName)
+          console.log(children[kidIndex].childname+"start6")
+            children[kidIndex].location.length<11||children[kidIndex].location.length==0?
+            children[kidIndex].location.push(obj):
+            (children[kidIndex].location.shift(),children[kidIndex].location.push(obj))
+            console.log(children[kidIndex].childname+"start7")
+
+
+return children
+}
+
+function setKidsCurrentLocationName(kidIndex,data,token,currentLocation,time)
+{
+
+
+    let locationName="notInBaseLocation";
+    let isHeInStoredLocation=false 
+    console.log(data.children[kidIndex].childname+"start1")
+  if(!data.children[kidIndex].
+    location.length)
+{
+    for(let i=0;i<data.BaseLocation.length;i++){
+        if(distance(data.BaseLocation[i].latitude,currentLocation.coords.latitude,
+            data.BaseLocation[i].longitude,currentLocation.coords.longitude
+            )<75)
+            {
+                locationName=data.BaseLocation[i].name
+                isHeInStoredLocation=true 
+                i=data.BaseLocation.length;
+                console.log("start1---"+locationName)
+                    return {locationName:locationName};
+            }
+            
+
+        }
+        console.log("222222222222222")
+        return {locationName:locationName};
+
+}
+
+
+
+  console.log("---"+data.children[kidIndex].childname+"999999999999999999999999")
+
+
+   if(data.children[kidIndex].
+    location[data.children[kidIndex].location.length-1].locationName=="notInBaseLocation")
+    {
+
+        for(let i=0;i<data.BaseLocation.length;i++){
+        if(distance(data.BaseLocation[i].latitude,currentLocation.coords.latitude,
+            data.BaseLocation[i].longitude,currentLocation.coords.longitude
+            )<75)
+            {
+                locationName=data.BaseLocation[i].name
+                console.log("out-in"+locationName)
+                isHeInStoredLocation=true 
+                i=data.BaseLocation.length;
+                i=data.BaseLocation.length;
+                activatePushNotification(token,
+                    data.children[kidIndex].connectionToken
+                    +" has entered - "+locationName)
+
+                    return {locationName:locationName,event:data.children[kidIndex].connectionToken
+                        +" has entered - "+locationName};//out->in
+            }
+            
+
+        }
+        console.log("out-out"+locationName)
+        return {locationName:locationName};//out->out
+
+    }
+
+    
+
+
+    for(let i=0;i<data.BaseLocation.length;i++){
+        if(distance(data.BaseLocation[i].latitude,currentLocation.coords.latitude,
+            data.BaseLocation[i].longitude,currentLocation.coords.longitude
+            )<75&&data.BaseLocation[i].name!=data.children[kidIndex].
+            location[data.children[kidIndex].location.length-1].locationName)
+            {
+                console.log(data.children[kidIndex].childname+"start2")
+                locationName=data.BaseLocation[i].name
+                isHeInStoredLocation=true 
+                i=data.BaseLocation.length;
+                i=data.BaseLocation.length;
+                activatePushNotification(token,
+                    data.children[kidIndex].connectionToken
+                    +" has entered - "+locationName)
+                    console.log("in-inOther"+locationName)
+                    return {locationName:locationName,event:
+                        data.children[kidIndex].connectionToken
+                        +" has entered - "+locationName };//in->in other base location- taleport
+            }
+            else if(distance(data.BaseLocation[i].latitude,currentLocation.coords.latitude,
+                data.BaseLocation[i].longitude,currentLocation.coords.longitude
+                )<75&&data.BaseLocation[i].name==data.children[kidIndex].
+                location[data.children[kidIndex].location.length-1].locationName)
+                {console.log("in-in same"+data.BaseLocation[i].name)
+                return {locationName:data.BaseLocation[i].name};}//in->in smae base location
+
+        }
+        console.log(data.children[kidIndex].childname+"start3")
+       
+        activatePushNotification(token,
+            data.children[kidIndex].connectionToken
+            +" left - "+
+            data.children[kidIndex].location[data.children[kidIndex]
+            .location.length-1].locationName)
+            console.log("in-out"+locationName)
+            return {locationName:locationName,event: data.children[kidIndex].connectionToken
+                +" left - "+
+                data.children[kidIndex].location[data.children[kidIndex]
+                .location.length-1].locationName}//in->out
+
+}
 
 
 
@@ -127,36 +267,35 @@ console.log("add")
 
 //childeren location
 router.patch('/users/parent/addChildrenLocation', function(req, res, next) {
-    const {id,currentLocation,connectionToken,token}=req.body;
+    const {id,currentLocation,connectionToken,token,batteryLevel}=req.body;
     let children;
     console.log("id")
-    User.findOne({_id:id})
+    User.findOne({_id:id})  
       .then((data) =>data?
-      User.findByIdAndUpdate(id, { $set: {children: updateKidLocationArray(data.children,connectionToken,currentLocation)} },
+      User.findByIdAndUpdate(id, { $set: {children: updateKidLocationArray(data.children,connectionToken,currentLocation,data,token,batteryLevel)} },
          { new: false }).then( async (data) => {
             // children=data.children;
             
 
   
-            const kidIndex=data.children.findIndex(e=>e.connectionToken==connectionToken)
-            console.log(kidIndex)
-            if(distance(data.children[kidIndex].location[data.children[kidIndex].location.length-1].latitude,currentLocation.coords.latitude,
-                data.children[kidIndex].location[data.children[kidIndex].location.length-1].longitude,currentLocation.coords.longitude
-                 ))
+            
+
+
+
+
+
                     //   activatePushNotification(token,"ss")
-                      console.log("sssssssssssssssssssssss")
-                     
+                    
+                        console.log("sssssssssssssssssssssss")
                         await global.io.emit(`${id}`, {children:data.children});
                        await global.io.on('disconnect',()=>{
                            ""
                             })
                      
                    
-//
+
                     res.json("succsess")
-                    //
-/// pass home name so that it will not fire allways
-//
+
       }).catch(err=>res.json(err))
       
       :res.json("user not found"))
@@ -174,6 +313,31 @@ router.patch('/users/parent/addChildrenLocation', function(req, res, next) {
       .catch(next)
   });
 
+
+
+
+
+  //notifications
+
+
+  router.post('/childClosedApp', function(req, res, next) {
+    const {id,connectionToken,batteryLevel}=req.body;
+    let messege;
+    let kidIndex;
+    console.log("closed")
+    User.findOne({_id:id})
+      .then((data) =>{
+       if(data)
+         {kidIndex=data.children.findIndex(e=>e.connectionToken==connectionToken);
+         messege=data.children[kidIndex].childname+" closed the app with battery level of : "
+         +batteryLevel
+        activatePushNotification(connectionToken,messege)
+        return
+}         
+      })
+      .catch(next)
+      return
+  });
 
 
 
