@@ -23,14 +23,15 @@ const UserSchema = new schema({
     required: true,
   },
 
-  children: [
-    {
-      childName: String,
-      childPhone: String,
-      connectionToken: String,
-      location: [{ latitude: String, longitude: String, time: Number }],
-    },
-  ],
+  children:[
+    {childname: String,
+    phone: String,
+    batteryLevel:Number,
+    events:[{event:String,time:Number}],
+    connectionToken:String,
+    location:[{latitude:String,longitude:String,time:Number,locationName:String}] }
+],
+ //[{childname:'yossi',phone:'12345678',batteryLevel:batteryLevel,events:[],connectionToken:'c8d682c1-cd6b',location:[]}]
   // connectionTokens:Array,
   BaseLocation: [{ latitude: String, longitude: String, name: String }],
 });
