@@ -1,15 +1,5 @@
 const { Expo } = require("expo-server-sdk");
-const express = require('express')
-
-
-
-
-
-
-
-
-
-
+const express = require("express");
 
 // "ExponentPushToken[Uh8EfSGwGP2wOYky3ImWmQ]"
 
@@ -36,4 +26,5 @@ const sendPushNotification = async (targetExpoPushToken, message) => {
 
 
 
-  module.exports = activatePushNotification;
+
+module.exports = activatePushNotification;
