@@ -3,6 +3,16 @@ const express = require("express");
 const { User } = require("../models/user");
 const router = express.Router();
 const uuid = require("uuid");
+const ShortUniqueId = require('short-unique-id');
+
+const childToken = () => {
+  let arr = []
+  for (let i = 0; i < 13; i++) {
+    arr[i] =Math.floor(Math.random() * (9 - 1 + 1)) + 1
+    console.log(arr[i])
+  }
+  return arr.join('')
+}
 
 router.post("/", async (req, res) => {
 
@@ -13,23 +23,25 @@ router.post("/", async (req, res) => {
   return res.send(users);
 });
 
-const childToken = uuid.v4();
+// const childToken = uuid.v4();
+// console.log(childToken,'childtoken');
+// console.log(childToken.slice(0, 13));
+// const uid = new ShortUniqueId({ length: 13 });
+// const childToken = uid()
+// console.log(childToken);
 
-console.log(childToken.slice(0, 13));
-
-router.patch("/", async (req, res) => {
-  // const {child} = req.body
-  const { id } = req.body;
+router.patch("/:id", async (req, res) => {
+  const id = req.params.id;
   try {
-    const addedChild = await User.findOneAndUpdate(id, {
+    await User.findByIdAndUpdate(id, {
       $push: {
         children: {
-          childName: req.body.childName,
-          childPhone: req.body.childPhone,
-          connectionToken: childToken.slice(0, 13),
+          childname: req.body.childname,
+          phone: req.body.phone,
+          connectionToken: childToken(),
         },
       },
-    }).then((data) => res.send(data.children) && console.log(data));
+    }).then((data) => res.send(data) && console.log(data));
   } catch (error) {
     console.log(error);
   }
