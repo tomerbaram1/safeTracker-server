@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
-const jwt = require("jsonwebtoken");
-const schema = mongoose.Schema;
+const mongoose = require('mongoose')
+const jwt = require('jsonwebtoken')
+const schema = mongoose.Schema
 
 const UserSchema = new schema({
   email: {
@@ -36,31 +36,28 @@ const UserSchema = new schema({
   BaseLocation: [{ latitude: String, longitude: String, name: String }],
 });
 
-const User = mongoose.model("user", UserSchema);
 
-
-  
-
-
-
+const User = mongoose.model('user', UserSchema)
 
 const genAuthToken = (user => {
     const secretKey = process.env.JWT_SECRET;
     const token = jwt.sign(
-
     {
-      _id: user._id,
-      email: user.email,
-      phoneNumber: user.phoneNumber,
-      fullName: user.fullName,
-      children: user.children,
-      connectionTokens: user.connectionTokens,
-      BaseLocation: user.BaseLocation,
+        _id: user._id,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        fullName: user.fullName,
+        children: user.children,
+        connectionTokens:user.connectionTokens,
+        BaseLocation:user.BaseLocation
+        
     },
 
     secretKey
-  );
-  return token;
-});
+    
+    );
+    return token
+})
 
-module.exports = { User, genAuthToken };
+
+module.exports = {User,genAuthToken};

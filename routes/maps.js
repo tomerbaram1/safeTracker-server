@@ -211,7 +211,7 @@ router.patch('/users/parent/pushNotification', function(req, res, next) {
  const {token}=req.body;
  const {location}=req.body;
  
- console.log(id+"********")
+ console.log(id+"********************")
 
  User.findOne({_id:id})
    .then((data) => 
@@ -274,19 +274,11 @@ router.patch('/users/parent/addChildrenLocation', function(req, res, next) {
       User.findByIdAndUpdate(id, { $set: {children:updateKidLocationArray(data.children,connectionToken,currentLocation,data,token,batteryLevel) } },
          { new: false }).then( async (data) => {
             // children=data.children;
-            
-
-  
-            
-
-
-
-
 
                     //   activatePushNotification(token,"ss")
                     
-                        console.log("sssssssssssssssssssssss")
-                        await global.io.emit(`${id}`, {children:data.children});
+                        console.log("emittttttttttttt")
+                        await global.io.emit(`${"63738fb9e33a0195e497e318"}`, {children:data.children});
                        await global.io.on('disconnect',()=>{
                            ""
                             })
@@ -342,3 +334,4 @@ router.patch('/users/parent/addChildrenLocation', function(req, res, next) {
 
 
   module.exports = router;
+  
