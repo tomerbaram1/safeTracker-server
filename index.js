@@ -12,8 +12,7 @@ const rateLimit= require('express-rate-limit')
 const register = require('./routes/register')
 const login = require('./routes/login')
 const map =require('./routes/maps')
-
-
+const addedChild = require('./routes/addChild')
 
 ///socket
 var socket = require('socket.io');
@@ -100,6 +99,7 @@ app.use(limiter)
 app.use('/api/register',register)
 app.use('/api/login',login)
 app.use('/api-map',map)
+app.use('/api/addchild',addedChild)
 
   
   // app.listen(port, () => {

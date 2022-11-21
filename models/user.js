@@ -27,6 +27,7 @@ const UserSchema = new schema({
     {childname: String,
     phone: String,
     batteryLevel:Number,
+    image: String,
     events:[{event:String,time:Number}],
     connectionToken:String,
     location:[{latitude:String,longitude:String,time:Number,locationName:String}] }

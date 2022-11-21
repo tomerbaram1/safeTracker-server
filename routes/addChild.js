@@ -17,16 +17,17 @@ const childToken = uuid.v4();
 
 console.log(childToken.slice(0, 13));
 
-router.patch("/", async (req, res) => {
-  // const {child} = req.body
-  const { id } = req.body;
+router.patch("/:id", async (req, res) => {
+  const { id } = req.params.id;
+  console.log(req.body.image);
   try {
-    const addedChild = await User.findOneAndUpdate(id, {
+    await User.findOneAndUpdate(id, {
       $push: {
         children: {
-          childName: req.body.childName,
-          childPhone: req.body.childPhone,
+          childname: req.body.childname,
+          phone: req.body.phone,
           connectionToken: childToken.slice(0, 13),
+          image: req.body.image
         },
       },
     }).then((data) => res.send(data.children) && console.log(data));
