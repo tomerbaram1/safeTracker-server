@@ -12,6 +12,7 @@ const rateLimit= require('express-rate-limit')
 const register = require('./routes/register')
 const login = require('./routes/login')
 const addChild = require('./routes/addChild')
+const childAuth = require('./routes/childAuth')
 const map =require('./routes/maps')
 
 
@@ -101,6 +102,7 @@ app.use(limiter)
 app.use('/api/register',register)
 app.use('/api/login',login)
 app.use('/api/addchild',addChild)
+app.use('/api/childAuth',childAuth)
 app.use('/api-map',map)
 
   

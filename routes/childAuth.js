@@ -4,7 +4,8 @@ const { User } = require("../models/user");
 const router = express.Router();
 
 router.post("/",async (req,res)=>{
-const {connectionToken} = req.body
+const {connectionToken,id} = req.body
+console.log(req.body);
     const schema = Joi.object({
         connectionToken: Joi.string().min(8).max(20).required(),
     });
@@ -12,12 +13,16 @@ const {connectionToken} = req.body
     const { error } = schema.validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
     const user = await User.findOne( { connectionToken } )
-    console.log(user, "user");
+    console.log(user);
+    // const childIndex = user.children.findIndex((e)=>e.connectionToken==connectionToken)
+    console.log(connectionToken, "connectionToken in back");
+    console.log(user.fullName, "parents full name in back");
     if (!user) return res.status(400).send("Invalid Connection Token");
     res.json({
         _id:user.id,
         fullName: user.fullName,
-        connectionToken: req.body.connectionToken,
+        connectionToken: connectionToken,
+        // childname:user.children[childIndex].childname
     
     })
 })
