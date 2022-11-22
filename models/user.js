@@ -2,16 +2,16 @@ const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
 const schema = mongoose.Schema
 
-const UserSchema = new schema ({
-    email: {
-        type: String,
-        required: true,
-    },
+const UserSchema = new schema({
+  email: {
+    type: String,
+    required: true,
+  },
 
-    phoneNumber: {
-        type: String,
-        required: true
-    },
+  phoneNumber: {
+    type: String,
+    required: true,
+  },
 
     fullName: {
         type: String,
@@ -37,6 +37,8 @@ const UserSchema = new schema ({
     connectionTokens:Array,
     BaseLocation:[{latitude:String,longitude:String,name:String}]
 }) 
+
+
 
 
 const User = mongoose.model('user', UserSchema)

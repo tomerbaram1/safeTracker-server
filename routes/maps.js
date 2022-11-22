@@ -1,4 +1,3 @@
-
 const express = require('express')
 const router = express.Router()
 const distance= require('../utills/maps')
@@ -379,6 +378,7 @@ router.patch('/users/parent/addChildrenLocation', function(req, res, next) {
     User.findOne({_id:id})  
       .then((data) =>data?
       User.findByIdAndUpdate(id, { $set: {children: updateKidLocationArray(data.children,connectionToken,currentLocation,data,token,batteryLevel,batteryStatus)} },
+
          { new: false }).then( async (data) => {
             // children=data.children;
 
