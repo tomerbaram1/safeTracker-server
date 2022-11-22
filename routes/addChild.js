@@ -23,12 +23,7 @@ router.post("/", async (req, res) => {
   return res.send(users);
 });
 
-// const childToken = uuid.v4();
-// console.log(childToken,'childtoken');
-// console.log(childToken.slice(0, 13));
-// const uid = new ShortUniqueId({ length: 13 });
-// const childToken = uid()
-// console.log(childToken);
+
 
 router.patch("/:id", async (req, res) => {
   const id = req.params.id;
@@ -39,6 +34,7 @@ router.patch("/:id", async (req, res) => {
           childname: req.body.childname,
           phone: req.body.phone,
           connectionToken: childToken(),
+          batteryLevel: 100
         },
       },
     }).then((data) => res.send(data) && console.log(data));
@@ -46,11 +42,5 @@ router.patch("/:id", async (req, res) => {
     console.log(error);
   }
 });
-
-// router.patch("/:id", async(req,res) => {
-//   User.findByIdAndDelete({_id: req.params.id})
-//   .then(data=> res.json(data))
-//   .catch(next)
-// })
 
 module.exports = router;
