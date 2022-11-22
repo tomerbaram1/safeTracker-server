@@ -27,13 +27,17 @@ const UserSchema = new schema ({
         {childname: String,
         phone: String,
         batteryLevel:Number,
+        batteryStatus:String,
         events:[{event:String,time:Number}],
         connectionToken:String,
         location:[{latitude:String,longitude:String,time:Number,locationName:String}]}
     ],
+
+    // [{childname: String, phone: String,batteryLevel:Number,  events:[],connectionToken:String,  location:[]}}]
     connectionTokens:Array,
     BaseLocation:[{latitude:String,longitude:String,name:String}]
 }) 
+
 
 const User = mongoose.model('user', UserSchema)
 
