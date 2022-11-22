@@ -12,6 +12,7 @@ const {connectionToken} = req.body
     const { error } = schema.validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
     const user = await User.findOne( { connectionToken } )
+    console.log(user, "user");
     if (!user) return res.status(400).send("Invalid Connection Token");
     res.json({
         _id:user.id,
