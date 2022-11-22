@@ -12,6 +12,94 @@ const { User } = require('../models/user')
   
 
 /// helpers
+//
+function checkUpdateBatteryStatus(child)
+{if(child.batteryLevel>=10&&child.batteryStatus=="under10")
+{
+  child.batteryStatus="under20"
+}
+
+
+
+
+else if(child.batteryLevel>=20&&child.batteryStatus=="under20")
+{
+  child.batteryStatus="under50"
+}
+
+
+else if(child.batteryLevel<50&&child.batteryStatus=="under50")
+{
+  child.batteryStatus="normal"
+}
+return child
+}
+
+
+
+function   isBatteryNotifications(data,connectionToken,token,batteryLevel)
+{
+
+  const kidIndex=data.children.findIndex(e=>e.connectionToken==connectionToken)
+  const children=data.children;
+
+
+
+
+  if(children[kidIndex].batteryLevel<=10&&children[kidIndex].batteryStatus=="normal"
+  || children[kidIndex].batteryStatus=="under50"|| children[kidIndex].batteryStatus=="under20")
+  {activatePushNotification(token,
+    data.children[kidIndex].connectionToken
+    +" phone has less then - 10%")
+    children[kidIndex].batteryStatus="under10"
+  }
+
+
+
+
+ else if(children[kidIndex].batteryLevel<=20&&children[kidIndex].batteryStatus=="normal"
+  || children[kidIndex].batteryStatus=="under50")
+  {activatePushNotification(token,
+    data.children[kidIndex].connectionToken
+    +" phone has less then - 20% ")
+    children[kidIndex].batteryStatus="under20"
+  }
+
+
+  else if(children[kidIndex].batteryLevel<=50&&children[kidIndex].batteryStatus=="normal")
+  {activatePushNotification(token,
+    data.children[kidIndex].connectionToken
+    +" phone has less then - 50% ")
+    data.children[kidIndex].batteryStatus="under50"
+  }
+///----------
+
+if(children[kidIndex].batteryLevel>=10&&children[kidIndex].batteryStatus=="under10")
+{
+  children[kidIndex].batteryStatus="under20"
+}
+
+
+
+
+else if(children[kidIndex].batteryLevel>=20&&children[kidIndex].batteryStatus=="under20")
+{
+  children[kidIndex].batteryStatus="under50"
+}
+
+
+else if(children[kidIndex].batteryLevel<50&&children[kidIndex].batteryStatus=="under50")
+{
+  children[kidIndex].batteryStatus="normal"
+}
+
+
+return children
+
+}
+
+
+
 
 
 function isInsertEvent(event,children,time,kidIndex)
@@ -40,11 +128,24 @@ return children
 
 
  function updateKidLocationArray(children,connectionToken,
-    currentLocation,data,token,batteryLevel)
+    currentLocation,data,token,batteryLevel,batteryStatus)
 {
     let time=new Date().getTime()
     const kidIndex=data.children.findIndex(e=>e.connectionToken==connectionToken)
-    data.children[kidIndex].batteryLevel=batteryLevel;
+    if(batteryStatus=="null")
+   {
+   }
+   else {
+
+    children[kidIndex]= checkUpdateBatteryStatus(children[kidIndex],batteryLevel)
+   }
+    
+    children[kidIndex].batteryStatus=
+  
+
+
+   children[kidIndex].batteryLevel=batteryLevel;
+  
     console.log(data.children[kidIndex].batteryLevel+"data.children[kidIndex].batteryLevel")
     console.log(kidIndex+"indexKid")
     console.log(children+"start4"+data.children[kidIndex].name)
@@ -55,16 +156,21 @@ return children
    console.log("is locationName exist"+ locationName)
        event?children= isInsertEvent(event,children,time,kidIndex):""
     
-   
+          
             let obj={latitude:currentLocation.coords.latitude,longitude:currentLocation.coords.longitude,time:time,locationName:locationName}
             
+
+
+
           console.log("obj"+obj.locationName)
           console.log(children[kidIndex].childname+"start6")
             children[kidIndex].location.length<11||children[kidIndex].location.length==0?
             children[kidIndex].location.push(obj):
             (children[kidIndex].location.shift(),children[kidIndex].location.push(obj))
             console.log(children[kidIndex].childname+"start7")
-
+              console.log("****************niroooooooo")
+              console.log( children[kidIndex].location[children[kidIndex].location.length-1].latitude)
+              console.log("****************niroooooooo")
 
 return children
 }
@@ -266,18 +372,22 @@ console.log("add")
 
 //childeren location
 router.patch('/users/parent/addChildrenLocation', function(req, res, next) {
-    const {id,currentLocation,connectionToken,token,batteryLevel}=req.body;
+    const {id,currentLocation,connectionToken,token,batteryLevel,batteryStatus}=req.body;
     let children;
+    let batteryStatusBack;
+    batteryStatus?batteryStatusBack=batteryStatus:batteryStatusBack="null"
     console.log("id")
-    User.findOne({_id:id}) 
-      .then((data) =>data?//}
-      User.findByIdAndUpdate(id, { $set: {children:updateKidLocationArray(data.children,connectionToken,currentLocation,data,token,batteryLevel) } },
+    User.findOne({_id:id})  
+      .then((data) =>data?
+      User.findByIdAndUpdate(id, { $set: {children: updateKidLocationArray(data.children,connectionToken,currentLocation,data,token,batteryLevel,batteryStatus)} },
+
          { new: false }).then( async (data) => {
             // children=data.children;
 
                     //   activatePushNotification(token,"ss")
                     
-                        console.log("emittttttttttttt")
+                        console.log("emittttttttttttt"+data.children[0].
+                        location[data.children[0].location.length-1].longitude)
                         await global.io.emit(`${"63738fb9e33a0195e497e318"}`, {children:data.children});
                        await global.io.on('disconnect',()=>{
                            ""
@@ -328,6 +438,25 @@ router.patch('/users/parent/addChildrenLocation', function(req, res, next) {
       })
       .catch(next)
       return
+  });
+
+
+
+
+  router.post('/childBatteryLevelChange', function(req, res, next) {
+    const {id,connectionToken,token,batteryLevel}=req.body;
+    User.findOne({_id:id})
+      .then((data) =>data? 
+      User.findByIdAndUpdate(id, { $set: {children: isBatteryNotifications(data,connectionToken,token,batteryLevel)} },
+      { new: false }).then( async (data) => {
+  
+
+                 res.json("succsess")
+
+   }).catch(err=>res.json(err))
+    
+      :"")
+      .catch(next)
   });
 
 
