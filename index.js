@@ -11,6 +11,7 @@ const port =  process.env.PORT || 4000;
 const rateLimit= require('express-rate-limit')
 const register = require('./routes/register')
 const login = require('./routes/login')
+const addChild = require('./routes/addChild')
 const map =require('./routes/maps')
 
 
@@ -99,6 +100,7 @@ app.use(limiter)
 // routes
 app.use('/api/register',register)
 app.use('/api/login',login)
+app.use('/api/addchild',addChild)
 app.use('/api-map',map)
 
   
