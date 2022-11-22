@@ -12,9 +12,8 @@ const { User } = require('../models/user')
   
 
 /// helpers
-
-
-checkUpdateBatteryStatus(child)
+//
+function checkUpdateBatteryStatus(child)
 {if(child.batteryLevel>=10&&child.batteryStatus=="under10")
 {
   child.batteryStatus="under20"
@@ -169,7 +168,9 @@ return children
             children[kidIndex].location.push(obj):
             (children[kidIndex].location.shift(),children[kidIndex].location.push(obj))
             console.log(children[kidIndex].childname+"start7")
-
+              console.log("****************niroooooooo")
+              console.log( children[kidIndex].location[children[kidIndex].location.length-1].latitude)
+              console.log("****************niroooooooo")
 
 return children
 }
@@ -373,7 +374,8 @@ console.log("add")
 router.patch('/users/parent/addChildrenLocation', function(req, res, next) {
     const {id,currentLocation,connectionToken,token,batteryLevel,batteryStatus}=req.body;
     let children;
-    batteryStatus?batteryStatus=batteryStatus:batteryStatus="null"
+    let batteryStatusBack;
+    batteryStatus?batteryStatusBack=batteryStatus:batteryStatusBack="null"
     console.log("id")
     User.findOne({_id:id})  
       .then((data) =>data?
@@ -384,7 +386,8 @@ router.patch('/users/parent/addChildrenLocation', function(req, res, next) {
 
                     //   activatePushNotification(token,"ss")
                     
-                        console.log("emittttttttttttt")
+                        console.log("emittttttttttttt"+data.children[0].
+                        location[data.children[0].location.length-1].longitude)
                         await global.io.emit(`${"63738fb9e33a0195e497e318"}`, {children:data.children});
                        await global.io.on('disconnect',()=>{
                            ""
