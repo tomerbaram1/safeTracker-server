@@ -13,6 +13,7 @@ const register = require('./routes/register')
 const login = require('./routes/login')
 const addChild = require('./routes/addChild')
 const childAuth = require('./routes/childAuth')
+const sos = require('./routes/sos')
 const map =require('./routes/maps')
 
 
@@ -103,6 +104,7 @@ app.use('/api/register',register)
 app.use('/api/login',login)
 app.use('/api/addchild',addChild)
 app.use('/api/childAuth',childAuth)
+app.use('/api/sos',sos)
 app.use('/api-map',map)
 
   
