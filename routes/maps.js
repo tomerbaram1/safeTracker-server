@@ -326,7 +326,7 @@ router.patch('/users/parent/pushNotification', function(req, res, next) {
                   );
                   
                   activatePushNotification(token,dis)
-   
+  
    })
    .catch(next)
 });
@@ -343,11 +343,12 @@ router.post('/get', function(req, res, next) {
 //
 
 router.post('/sos', function(req, res, next) {
-  console.log("S")
+  console.log("gurmuta")
   const {id,token}=req.body
-  User.find({})
-    .then((data) =>res.json(data))
+  User.findOne({_id:id})
+    .then((data) =>{activatePushNotification(token,"Yosi has pressed SOS! "); res.json("meow")})
     .catch(next)
+    res.json("meow")
 });
 
 ///Base locations
