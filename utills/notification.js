@@ -8,7 +8,7 @@ const sendPushNotification = async (targetExpoPushToken, message) => {
     const expo = new Expo();
    
     const chunks = expo.sendPushNotificationsAsync([
-      { to:targetExpoPushToken ,  title: message, sound: "default", body:message  }
+      { to:"ExponentPushToken[qHMVt-A8zOkRpYf4e4DUnC]" ,  title: message, sound: "default", body:message  }
     ])
   }
   

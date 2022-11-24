@@ -293,7 +293,6 @@ function setKidsCurrentLocationName(kidIndex,data,token,currentLocation,time)
 
 
 
-
 //testing
 router.delete('/delete', function(req, res, next) {
  
@@ -343,7 +342,13 @@ router.post('/get', function(req, res, next) {
 
 //
 
-
+router.post('/sos', function(req, res, next) {
+  console.log("S")
+  const {id,token}=req.body
+  User.find({})
+    .then((data) =>res.json(data))
+    .catch(next)
+});
 
 ///Base locations
 
