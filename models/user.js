@@ -39,6 +39,22 @@ const UserSchema = new schema({
 }) 
 
 
+<<<<<<< HEAD
+=======
+  children:[
+    {childname: String,
+    phone: String,
+    batteryLevel:Number,
+    image: String,
+    events:[{event:String,time:Number}],
+    connectionToken:String,
+    location:[{latitude:String,longitude:String,time:Number,locationName:String}] }
+],
+ //[{childname:'yossi',phone:'12345678',batteryLevel:batteryLevel,events:[],connectionToken:'c8d682c1-cd6b',location:[]}]
+  // connectionTokens:Array,
+  BaseLocation: [{ latitude: String, longitude: String, name: String }],
+});
+>>>>>>> f7dfd65 (cloudinary)
 
 
 const User = mongoose.model('user', UserSchema)

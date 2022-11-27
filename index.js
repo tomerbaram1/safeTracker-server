@@ -15,8 +15,7 @@ const addChild = require('./routes/addChild')
 const childAuth = require('./routes/childAuth')
 const sos = require('./routes/sos')
 const map =require('./routes/maps')
-
-
+const addedChild = require('./routes/addChild')
 
 ///socket
 var socket = require('socket.io');
@@ -106,6 +105,7 @@ app.use('/api/addchild',addChild)
 app.use('/api/childAuth',childAuth)
 app.use('/api/sos',sos)
 app.use('/api-map',map)
+app.use('/api/addchild',addedChild)
 
   
   // app.listen(port, () => {

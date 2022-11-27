@@ -11,7 +11,7 @@ const childToken = () => {
     arr[i] =Math.floor(Math.random() * (9 - 1 + 1)) + 1
     console.log(arr[i])
   }
-  return arr.join('')
+  return arr.join("")
 }
 
 router.post("/", async (req, res) => {
@@ -34,7 +34,8 @@ router.patch("/:id", async (req, res) => {
           childname: req.body.childname,
           phone: req.body.phone,
           connectionToken: childToken(),
-          batteryLevel: 100
+          batteryLevel: 100,
+          image: req.body.image
         },
       },
     }).then((data) => res.send(data) && console.log(data));
